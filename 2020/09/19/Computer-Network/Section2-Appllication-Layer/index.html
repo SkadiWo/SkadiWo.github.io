@@ -1,0 +1,232 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Oswin Wu"><meta name="copyright" content="Oswin Wu"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>计算机网络 - 应用层 | 诡异的鱼塘</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.24/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_j5gk85dg4pf.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.css"><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/copy-tex.min.js"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script><script>document.addEventListener("DOMContentLoaded", () => {
+  Yun.utils.renderKatex();
+});</script><link rel="icon" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"blog.fishsmemory.ml","root":"/","title":"摸鱼日常","version":"1.6.1","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><link rel="alternate" href="/atom.xml" title="诡异的鱼塘" type="application/atom+xml"><meta name="description" content="生气！极其不友好的考纲 应用层协议的原理网络应用体系结构规定如何在各种端系统上组织应用程序，由研发者设计,规定了如何在各种端系统上组织该应用程序。 e.g.  CS体系结构(Client-Server architecture)  P2P体系结构(P2P architecture)  进程通信进程通信实际上是进程(Process)而不是程序，多个进程运行于相同的端系统上时，它们利用进程间通信机制相">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络 - 应用层">
+<meta property="og:url" content="https://blog.fishsmemory.ml/2020/09/19/Computer-Network/Section2-Appllication-Layer/index.html">
+<meta property="og:site_name" content="诡异的鱼塘">
+<meta property="og:description" content="生气！极其不友好的考纲 应用层协议的原理网络应用体系结构规定如何在各种端系统上组织应用程序，由研发者设计,规定了如何在各种端系统上组织该应用程序。 e.g.  CS体系结构(Client-Server architecture)  P2P体系结构(P2P architecture)  进程通信进程通信实际上是进程(Process)而不是程序，多个进程运行于相同的端系统上时，它们利用进程间通信机制相">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/Using%20Cookie.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/DNS%20architecture.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/DNS%20Message.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/Email%20Achitecture.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/UDP%20CS%20Application.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/CS%20VS%20P2P.PNG">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/DHT.PNG">
+<meta property="article:published_time" content="2020-09-19T02:39:37.000Z">
+<meta property="article:modified_time" content="2021-05-11T15:27:38.924Z">
+<meta property="article:author" content="Oswin Wu">
+<meta property="article:tag" content="应用层">
+<meta property="article:tag" content="HTTP">
+<meta property="article:tag" content="Web Cache">
+<meta property="article:tag" content="Cookie">
+<meta property="article:tag" content="DNS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/Using%20Cookie.jpg"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Oswin Wu"><img width="96" loading="lazy" src="/avatar.png" alt="Oswin Wu"></a><div class="site-author-name"><a href="/about/">Oswin Wu</a></div><span class="site-name">诡异的鱼塘</span><sub class="site-subtitle">一 个 浅 鱼 塘</sub><div class="site-desciption">我也不知道写了啥|炸鱼❌|Friendly Argument ✔</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">5</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">3</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">16</span></a></div><a class="site-state-item hty-icon-button" href="/about/" title="关于我"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/OswinWu" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:Oswin-Wu@outlook.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a><a class="links-item hty-icon-button" href="/girls/" title="可爱的女孩子" style="color:hotpink"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-women-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">应用层协议的原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">网络应用体系结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E9%80%9A%E4%BF%A1"><span class="toc-number">1.2.</span> <span class="toc-text">进程通信</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E4%BE%9B%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E4%BD%BF%E7%94%A8%E7%9A%84%E8%BF%90%E8%BE%93%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.3.</span> <span class="toc-text">可供应用程序使用的运输服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%A0%E7%89%B9%E7%BD%91%E6%8F%90%E4%BE%9B%E7%9A%84%E8%BF%90%E8%BE%93%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.4.</span> <span class="toc-text">因特网提供的运输服务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%AE%9E%E7%8E%B0%E8%BF%87%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">应用层协议的实现过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web-%E5%BA%94%E7%94%A8%E5%92%8C-HTTP-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.</span> <span class="toc-text">Web 应用和 HTTP 协议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%81%E7%BB%AD%E8%BF%9E%E6%8E%A5%E4%B8%8E%E9%9D%9E%E6%8C%81%E7%BB%AD%E8%BF%9E%E6%8E%A5"><span class="toc-number">3.0.1.</span> <span class="toc-text">持续连接与非持续连接</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%A5%E6%96%87%E6%A0%BC%E5%BC%8F"><span class="toc-number">3.0.2.</span> <span class="toc-text">报文格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Cookie"><span class="toc-number">3.0.3.</span> <span class="toc-text">Cookie</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Web%E7%BC%93%E5%AD%98%E5%99%A8"><span class="toc-number">3.0.4.</span> <span class="toc-text">Web缓存器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6GET%E6%96%B9%E6%B3%95"><span class="toc-number">3.0.5.</span> <span class="toc-text">条件GET方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FTP-%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%9C%BA%E5%88%B6"><span class="toc-number">4.</span> <span class="toc-text">FTP 协议的实现机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#FTP%E4%BC%A0%E8%BE%93%E8%BF%87%E7%A8%8B"><span class="toc-number">4.1.</span> <span class="toc-text">FTP传输过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%EF%BC%9F%EF%BC%88%E6%88%91%E4%B9%9F%E4%B8%8D%E7%9F%A5%E9%81%93%E6%80%8E%E4%B9%88%E6%8F%8F%E8%BF%B0"><span class="toc-number">4.2.</span> <span class="toc-text">其他？（我也不知道怎么描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PORT%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.3.</span> <span class="toc-text">PORT模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PASV%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.4.</span> <span class="toc-text">PASV模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DNS-%E7%9A%84%E5%8A%9F%E8%83%BD%E5%92%8C%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%B3%95"><span class="toc-number">5.</span> <span class="toc-text">DNS 的功能和实现方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">5.1.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0"><span class="toc-number">5.2.</span> <span class="toc-text">实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">5.2.1.</span> <span class="toc-text">存在的问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-%E2%80%94%E2%80%94-%E5%88%86%E5%B8%83%E5%BC%8F%E3%80%81%E5%B1%82%E6%AC%A1%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">5.2.2.</span> <span class="toc-text">解决方案 —— 分布式、层次数据库</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="toc-number">5.2.2.1.</span> <span class="toc-text">层次结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#DNS%E7%BC%93%E5%AD%98"><span class="toc-number">5.2.2.2.</span> <span class="toc-text">DNS缓存</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#DNS%E8%AE%B0%E5%BD%95%E5%92%8C%E6%8A%A5%E6%96%87"><span class="toc-number">5.2.2.3.</span> <span class="toc-text">DNS记录和报文</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%B5%E5%AD%90%E9%82%AE%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E6%9E%84%E6%88%90%E3%80%81%E4%BC%A0%E8%BE%93%E6%9C%BA%E5%88%B6%E5%92%8C%E5%8D%8F%E8%AE%AE"><span class="toc-number">6.</span> <span class="toc-text">电子邮件系统的构成、传输机制和协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E6%88%90%E4%B8%8E%E4%BC%A0%E8%BE%93%E6%9C%BA%E5%88%B6"><span class="toc-number">6.1.</span> <span class="toc-text">构成与传输机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8F%E8%AE%AE"><span class="toc-number">6.2.</span> <span class="toc-text">协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCP-%E5%92%8C-UDP-%E5%A5%97%E6%8E%A5%E5%AD%97%E7%BC%96%E7%A8%8B"><span class="toc-number">7.</span> <span class="toc-text">TCP 和 UDP 套接字编程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#UDP%E5%A5%97%E6%8E%A5%E5%AD%97"><span class="toc-number">7.1.</span> <span class="toc-text">UDP套接字</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UDP-Client"><span class="toc-number">7.1.1.</span> <span class="toc-text">UDP Client</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#UDP-Server"><span class="toc-number">7.1.2.</span> <span class="toc-text">UDP Server</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#P2P-%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB%E5%8E%9F%E7%90%86"><span class="toc-number">8.</span> <span class="toc-text">P2P 文件共享原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#P2P-%E9%9B%86%E4%B8%AD%E5%BC%8F%E7%9B%AE%E5%BD%95"><span class="toc-number">8.1.</span> <span class="toc-text">P2P 集中式目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BitTorrent"><span class="toc-number">8.2.</span> <span class="toc-text">BitTorrent</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DHT-Distributed-Hash-Table"><span class="toc-number">8.3.</span> <span class="toc-text">DHT(Distributed Hash Table)</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://blog.fishsmemory.ml/2020/09/19/Computer-Network/Section2-Appllication-Layer/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Oswin Wu"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="诡异的鱼塘"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">计算机网络 - 应用层</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2020-09-19 10:39:37" itemprop="dateCreated datePublished" datetime="2020-09-19T10:39:37+08:00">2020-09-19</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2021-05-11 23:27:38" itemprop="dateModified" datetime="2021-05-11T23:27:38+08:00">2021-05-11</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">计算机网络</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E5%BA%94%E7%94%A8%E5%B1%82/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">应用层</span></a><a class="tag-item" href="/tags/HTTP/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">HTTP</span></a><a class="tag-item" href="/tags/Web-Cache/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Web Cache</span></a><a class="tag-item" href="/tags/Cookie/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Cookie</span></a><a class="tag-item" href="/tags/DNS/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">DNS</span></a></span></div><div class="post-author"><div class="author-avatar"><img src="https://www.gravatar.com/avatar/2880a387595e45c517e7cb98cd89bd1a?s=20&amp;d=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FYunYouJun%2Fcdn%2Fimg%2Favatar%2Fnone.jpg"></div><span class="author-name">Oswin Wu</span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p><del><em>生气！极其不友好的考纲</em></del></p>
+<h2 id="应用层协议的原理"><a href="#应用层协议的原理" class="headerlink" title="应用层协议的原理"></a>应用层协议的原理</h2><h3 id="网络应用体系结构"><a href="#网络应用体系结构" class="headerlink" title="网络应用体系结构"></a>网络应用体系结构</h3><p>规定如何在各种端系统上组织应用程序，由研发者设计,规定了如何在各种端系统上组织该应用程序。 <br>e.g.</p>
+<ol>
+<li>CS体系结构(Client-Server architecture) </li>
+<li>P2P体系结构(P2P architecture)</li>
+</ol>
+<h3 id="进程通信"><a href="#进程通信" class="headerlink" title="进程通信"></a>进程通信</h3><p>进程通信实际上是进程(Process)而不是程序，多个进程运行于相同的端系统上时，它们利用进程间通信机制相互通信；进程运行于不同的端系统上时，通过跨越计算机网络交换报文(Message)而互相通信。 <br>进程与计算机网络之间的接口是套接字(Socket)，其中一部分套接字建立了网络应用程序的可编程接口，被称之为应用程序与网络之间的应用程序编程接口(API, Application Programming Interface)。 <br><del>此处值得一提的是</del>进程寻址需要IP与端口号。<del>地址与门牌号</del></p>
+<h3 id="可供应用程序使用的运输服务"><a href="#可供应用程序使用的运输服务" class="headerlink" title="可供应用程序使用的运输服务"></a>可供应用程序使用的运输服务</h3><p><em>以下为分类</em></p>
+<ol>
+<li>可靠数据传输</li>
+<li>吞吐量</li>
+<li>定时 <del>其实是延迟</del></li>
+<li>安全性</li>
+</ol>
+<h3 id="因特网提供的运输服务"><a href="#因特网提供的运输服务" class="headerlink" title="因特网提供的运输服务"></a>因特网提供的运输服务</h3><ol>
+<li>TCP</li>
+<li>UDP</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="center">应用</th>
+<th align="center">应用层协议</th>
+<th align="center">支持的运输协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">电子邮件</td>
+<td align="center">SMTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">远程终端访问</td>
+<td align="center">Telnet</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">Web</td>
+<td align="center">HTTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">文件传输</td>
+<td align="center">FTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">流式多媒体</td>
+<td align="center">HTTP</td>
+<td align="center">TCP</td>
+</tr>
+<tr>
+<td align="center">因特网电话</td>
+<td align="center">SIP、RTP</td>
+<td align="center">TCP/UDP</td>
+</tr>
+</tbody></table>
+<h2 id="应用层协议的实现过程"><a href="#应用层协议的实现过程" class="headerlink" title="应用层协议的实现过程"></a>应用层协议的实现过程</h2><p>应用层协议定义了运行在不同端系统上的应用程序如何进行报文传递，特别定义了一下几部分：</p>
+<ol>
+<li>交换的报文类型</li>
+<li>各种报文类型的语法</li>
+<li>字段的语义</li>
+<li>确定一个进程何时以及如何发送报文，对报文进行响应的规则</li>
+</ol>
+<h2 id="Web-应用和-HTTP-协议"><a href="#Web-应用和-HTTP-协议" class="headerlink" title="Web 应用和 HTTP 协议"></a>Web 应用和 HTTP 协议</h2><p><del>终于到我会一点点的地方了</del> <br>Web的应用层协议核心就是HTTP(HyperText Transfer Protocol)协议，HTTP协议是一个无状态协议。</p>
+<h4 id="持续连接与非持续连接"><a href="#持续连接与非持续连接" class="headerlink" title="持续连接与非持续连接"></a>持续连接与非持续连接</h4><p>每个请求/响应都是由单独的一个TCP连接发送的，是为非持续性连接，反之则是持续连接。 <br>非持续连接存在以下缺点：</p>
+<ol>
+<li>必须为每个请求的对象建立和维护一个全新的连接。</li>
+<li>每个对象经受两倍RTT(Round-Trip Time)的交付延迟，即一个RTT用于创建TCP，一个RTT用于请求和接收一个对象。<h4 id="报文格式"><a href="#报文格式" class="headerlink" title="报文格式"></a>报文格式</h4><del>请打开F12</del> <br><del>Chrome似乎看不到raw的，打开fiddler</del> <br><del>众所周知，百度是用来测试网络连通性的</del> \</li>
+</ol>
+<p><em>以下报文删去了一部分内容</em> <br><em>请注意HTTPS类型的traffic请在fiddler中信任根证书</em> <br>请求报文样例</p>
+<pre><code>GET https://www.baidu.com/ HTTP/1.1
+Host: www.baidu.com
+Connection: keep-alive
+Accept: text/plain, */*; q=0.01
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36
+X-Requested-With: XMLHttpRequest
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: cors
+Sec-Fetch-Dest: empty
+Referer: https://www.baidu.com/
+Accept-Encoding: gzip, deflate, br
+Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,zh-TW;q=0.7</code></pre>
+<p>响应报文样例</p>
+<pre><code>HTTP/1.1 200 OK
+Cache-Control: private
+Connection: keep-alive
+Content-Encoding: gzip
+Content-Type: text/html;charset=utf-8
+Date: Mon, 12 Oct 2020 08:05:44 GMT
+Expires: Mon, 12 Oct 2020 08:05:44 GMT
+Server: BWS/1.0
+Vary: Accept-Encoding
+Content-Length: 49</code></pre>
+<p>没什么好讲的（确信<br>来记一些状态码吧！</p>
+<ul>
+<li>200 OK</li>
+<li>301 Moved Permanently</li>
+<li>400 Bad Request</li>
+<li>404 Not Found</li>
+<li>505 HTTP Version Not Supported</li>
+<li>500 Internal Server Error</li>
+</ul>
+<h4 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h4><p>前文已经提到了，HTTP是一种无状态协议，这意味着将无法识别用户，为了解决这个问题，HTTP使用了Cookie对用户进行识别追踪。<br><img src="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/Using%20Cookie.jpg" alt="Using Cookie" loading="lazy"></p>
+<h4 id="Web缓存器"><a href="#Web缓存器" class="headerlink" title="Web缓存器"></a>Web缓存器</h4><p>Web Cache A.K.A Proxy Server <br>How does it work: </p>
+<ol>
+<li>浏览器创建一个到Web缓存器的TCP连接，并为向其中所请求的对象发送一个HTTP请求</li>
+<li>Web缓存器检查其本地是否存有该对象，若有则响应报文并返回该对象</li>
+<li>若不存在该对象，则在与服务器(该对象本来的来源处)的TCP连接上，发送对此对象的请求。</li>
+<li>当Web缓存器接收到此对象时，先于本地存储一份副本，随后将其发至客户端。</li>
+</ol>
+<p>Why: 代替原始服务器满足HTTP请求 <del>并且减少接入公共因特网带宽成本</del><br>e.g. CDN(Content Distribution Network)</p>
+<h4 id="条件GET方法"><a href="#条件GET方法" class="headerlink" title="条件GET方法"></a>条件GET方法</h4><p>Client请求：If-modified-since: &lt;date&gt; <br>未修改则：HTTP/1.0 304 Not Modified <br>修改则：&lt;data&gt;</p>
+<h2 id="FTP-协议的实现机制"><a href="#FTP-协议的实现机制" class="headerlink" title="FTP 协议的实现机制"></a>FTP 协议的实现机制</h2><p><em>书上没有这一节</em> <br><em>参阅以前的课件作如下描述</em><br>FTP用于传输文件到远程主机/从远程主机下载文件，存在以下两种模式<br>client/server模式</p>
+<ul>
+<li>client: 发起传输的一方</li>
+<li>server: 远程主机</li>
+</ul>
+<p>对于ftp服务器，其默认端口号为21(控制端口)。</p>
+<h3 id="FTP传输过程"><a href="#FTP传输过程" class="headerlink" title="FTP传输过程"></a>FTP传输过程</h3><ol>
+<li>FTP客户首先发起建立1个与FTP服务器端口21之间的TCP控制连接, TCP为传输层协议</li>
+<li>客户在控制连接上获得身份认证，发送各种控制命令.</li>
+<li>服务器收到1个文件传输命令时, 服务器在端口20(数据传输端口)创建1个与客户端口的TCP数据连接（Port）</li>
+<li>1个文件传输后,服务器结束这个TCP数据连接.</li>
+</ol>
+<h3 id="其他？（我也不知道怎么描述"><a href="#其他？（我也不知道怎么描述" class="headerlink" title="其他？（我也不知道怎么描述"></a>其他？（我也不知道怎么描述</h3><ol>
+<li>服务器创建第2个TCP与客户的数据连接来传输下一个文件.</li>
+<li>控制连接: 带外发送控制信息</li>
+<li>FTP 服务器维护用户状态信息: 当前目录, 先前身份认证</li>
+</ol>
+<h3 id="PORT模式"><a href="#PORT模式" class="headerlink" title="PORT模式"></a>PORT模式</h3><p>PORT模式下的FTP服务： 缺省情况下PORT模式的数据端口是20， 控制端口是21（控制端口可以设定， 本文假定使用21）。 当进行连接时,客户端使用一个随机的端口N（N大于1024)连接服务器的控制端口21， 然后客户端开始监听端口N+1，并向服务器发送命令 PORT N+1，服务器用自己的数据端口20连回客户的N+1端口。 由于PORT模式仅仅是发送端口给服务器，由服务器连回客户端，如果客户端有防火墙，这样的连接会被认为是外部主机试图连接内部的主机， 通常情况下是不允许的。 </p>
+<h3 id="PASV模式"><a href="#PASV模式" class="headerlink" title="PASV模式"></a>PASV模式</h3><p>PASV模式下的FTP服务： 当进行连接时,客户端使用一个随机的端口N（N大于1024) 连接服务器的控制端口21， 并向服务器发送命令 PASV，服务器使用一个随机的数据端口M(M&gt;1024)并发回客户端, 客户端用数据端口N+1连接服务器的端口M。 由于客户端发起数据连接， 这样就解决了防火墙带来的问题。 </p>
+<h2 id="DNS-的功能和实现方法"><a href="#DNS-的功能和实现方法" class="headerlink" title="DNS 的功能和实现方法"></a>DNS 的功能和实现方法</h2><h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><ol>
+<li>主机名到IP地址转换 (Main)</li>
+<li>主机别名</li>
+<li>邮件服务器别名(MX记录)</li>
+<li>负载均衡</li>
+</ol>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><h4 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h4><ol>
+<li>单点故障</li>
+<li>通信容量</li>
+<li>远距离的集中式数据库</li>
+<li>维护</li>
+</ol>
+<h4 id="解决方案-——-分布式、层次数据库"><a href="#解决方案-——-分布式、层次数据库" class="headerlink" title="解决方案 —— 分布式、层次数据库"></a>解决方案 —— 分布式、层次数据库</h4><h5 id="层次结构"><a href="#层次结构" class="headerlink" title="层次结构"></a>层次结构</h5><p><img src="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/DNS%20architecture.jpg" alt="DNS Architecture" loading="lazy"><br>由根DNS服务器提供TLD(Top-Level Domain)服务器的IP地址，每个TLD服务器又提供了权威DNS服务器的IP地址，最后由权威DNS服务器，将这些主机名映射为IP地址。</p>
+<h5 id="DNS缓存"><a href="#DNS缓存" class="headerlink" title="DNS缓存"></a>DNS缓存</h5><p>其实是本地DNS服务器，可参见Web Cache做类比。</p>
+<h5 id="DNS记录和报文"><a href="#DNS记录和报文" class="headerlink" title="DNS记录和报文"></a>DNS记录和报文</h5><p>DNS记录由四元组构成，如下</p>
+<pre><code>（Name, Value, Type, TTL)</code></pre>
+<p>其中TTL代表该记录的生存时间，Type决定了Name和Value。 <br>以下是几种常见的Type与其对应的Name和Value：</p>
+<ul>
+<li>(Name, IPv4 Address, A, TTL) e.g. (blog, IPv4 Address, A, TTL)</li>
+<li>(Name, IPv6 Address, AAA, TTL) e.g. (blog, IPv6 Address, AAA, TTL)</li>
+<li>(Name, Domain, NS, TTL) e.g. (Tinysnow, A NS Server, NS, TTL)</li>
+<li>(Name, Domain, CNAME, TTL) e.g. (blog, skadiwo.github.io, CNAME, TTL)</li>
+<li>(Name, Domain, MX, TTL) e.g. (mail, mail.163.com, MX, TTL) <em>禁止指向CNAME</em> </li>
+</ul>
+<p>报文构成 <br><img src="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/DNS%20Message.png" alt="DNS Message" loading="lazy"></p>
+<h2 id="电子邮件系统的构成、传输机制和协议"><a href="#电子邮件系统的构成、传输机制和协议" class="headerlink" title="电子邮件系统的构成、传输机制和协议"></a>电子邮件系统的构成、传输机制和协议</h2><h3 id="构成与传输机制"><a href="#构成与传输机制" class="headerlink" title="构成与传输机制"></a>构成与传输机制</h3><p><img src="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/Email%20Achitecture.jpg" alt="Email Architecture" loading="lazy"><br>于上图可知，因特网电子邮件系统有三个组成部分：用户代理(User Agent)、邮件服务器(Mail Server)、简单邮件传输协议(Simple Mail Transfer Protocol,SMTP)<br>一个典型的邮件发送过程是：从发送方的用户代理开始．传输到发送方的邮件服务器、再传输到接收方的邮件服务器，然后在这里被分发到接收方的邮箱中。</p>
+<h3 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h3><p><del><em>写不动了自己看吧</em></del></p>
+<ul>
+<li>SMTP -&gt; <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=PJo5yOtu7o8">https://www.youtube.com/watch?v=PJo5yOtu7o8</a></li>
+<li>POP3 &amp; IMAP -&gt; <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=SBaARws0hy4">https://www.youtube.com/watch?v=SBaARws0hy4</a></li>
+</ul>
+<h2 id="TCP-和-UDP-套接字编程"><a href="#TCP-和-UDP-套接字编程" class="headerlink" title="TCP 和 UDP 套接字编程"></a>TCP 和 UDP 套接字编程</h2><h3 id="UDP套接字"><a href="#UDP套接字" class="headerlink" title="UDP套接字"></a>UDP套接字</h3><p><img src="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/UDP%20CS%20Application.jpg" alt="UDP" loading="lazy"></p>
+<h4 id="UDP-Client"><a href="#UDP-Client" class="headerlink" title="UDP Client"></a>UDP Client</h4><pre><code class="python3">from socket import *  # 导包
+serverName = &#39;localhost&#39;  # 设置服务器主机名
+serverPort = 12000  # 设置服务器端口号
+# AF_INET代表了IPv4，SOCK_DGRAM代表了这是个UDP的Socket
+clientSocket = socket(AF_INET, SOCK_DGRAM)
+message = input(&#39;Input lowercase sentence&#39;)  # 输入要哔哔的话
+clientSocket.sendto(message.encode(), (serverName,
+                                       serverPort))  # 咱就给您送出去！（顺便编个码）
+modifiedMessage, serverAddress = clientSocket.recvfrom(2048)  # 好咧，别人给您的回信来啦！
+print(modifiedMessage.decode())  # 看看别人咋哔哔的（顺便解个码）
+clientSocket.close()    # 再见了您咧！</code></pre>
+<h4 id="UDP-Server"><a href="#UDP-Server" class="headerlink" title="UDP Server"></a>UDP Server</h4><pre><code class="python3">from socket import *  # 导包
+serverName = &#39;localhost&#39;  # 设置服务器主机名
+serverPort = 12000  # 设置服务器端口号
+# AF_INET代表了IPv4，SOCK_DGRAM代表了这是个UDP的Socket
+serverSocket = socket(AF_INET, SOCK_DGRAM)
+serverSocket.bind((&#39;&#39;, serverPort))  # 绑定IP和端口喔！
+print(&quot;The Server is ready to recive!&quot;)  # 准备好啦！
+while True:
+    message, clientAddress = clientSocket.recvfrom(2048)  # 好呀，看看谁来信了！
+    modifiedMessage = message.decode().upper()  # 解个码变大写！
+    serverSocket.sendto(modifiedMessage.encode(),
+                        clientAddress)  # 咱就给您送回去！（顺便编个码）
+
+# 惨，Server不能关（?</code></pre>
+<h2 id="P2P-文件共享原理"><a href="#P2P-文件共享原理" class="headerlink" title="P2P 文件共享原理"></a>P2P 文件共享原理</h2><p><img src="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/CS%20VS%20P2P.PNG" alt="CS VS P2P" loading="lazy"></p>
+<h3 id="P2P-集中式目录"><a href="#P2P-集中式目录" class="headerlink" title="P2P 集中式目录"></a>P2P 集中式目录</h3><p>上图中，若在P2P网络中加入一个作为目录（索引）的服务器，为对等方提供检索服务，即为P2P集中式目录(结构)。</p>
+<ul>
+<li>单点故障</li>
+<li>性能瓶颈</li>
+<li>侵犯版权</li>
+</ul>
+<h3 id="BitTorrent"><a href="#BitTorrent" class="headerlink" title="BitTorrent"></a>BitTorrent</h3><p>BitTorrent 是一种用于文件分发的流行P2P协议。参与一个特定文件分发的所有对等方的集合被称之为一个torrent；在一个torrent中，对等方彼此下载等长度的chunk，典型的chunk长度(size)为256KB。</p>
+<h3 id="DHT-Distributed-Hash-Table"><a href="#DHT-Distributed-Hash-Table" class="headerlink" title="DHT(Distributed Hash Table)"></a>DHT(Distributed Hash Table)</h3><p><img src="https://cdn.jsdelivr.net/gh/SkadiWo/BlogResources/img/DHT.PNG" alt="DHT" loading="lazy"><br>使用键值对(Key-Value)进行存储，每个对等方皆能查询(get)与插入(put)。</p>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Oswin Wu</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://blog.fishsmemory.ml/2020/09/19/Computer-Network/Section2-Appllication-Layer/" title="计算机网络 - 应用层">https://blog.fishsmemory.ml/2020/09/19/Computer-Network/Section2-Appllication-Layer/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2020/10/12/Software-Engineering/Overview/" rel="prev" title="软件工程 - 概述"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">软件工程 - 概述</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2020/08/01/Computer-Network/Section1-Computer-And-Internet/" rel="next" title="计算机网络 - 计算机与因特网"><span class="post-nav-text">计算机网络 - 计算机与因特网</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Oswin Wu</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.4.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.1</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>

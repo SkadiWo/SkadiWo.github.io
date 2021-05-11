@@ -1,0 +1,184 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="Oswin Wu"><meta name="copyright" content="Oswin Wu"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>Golang学习手记 | 诡异的鱼塘</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.24/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_j5gk85dg4pf.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link rel="icon" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"blog.fishsmemory.ml","root":"/","title":"摸鱼日常","version":"1.6.1","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><link rel="alternate" href="/atom.xml" title="诡异的鱼塘" type="application/atom+xml"><meta name="description" content="Go项目结构 go.mod  go.sum  *.go   go.mod是相关Go包的集合，是源代码交换和版本控制的单元 其提供了module, require、replace和exclude四个命令 module hello  go 1.16  replace example.com&#x2F;greetings &#x3D;&gt; ..&#x2F;greetings  require example.com&#x2F;greeti">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang学习手记">
+<meta property="og:url" content="https://blog.fishsmemory.ml/2021/05/11/Golang/Golang-Start/index.html">
+<meta property="og:site_name" content="诡异的鱼塘">
+<meta property="og:description" content="Go项目结构 go.mod  go.sum  *.go   go.mod是相关Go包的集合，是源代码交换和版本控制的单元 其提供了module, require、replace和exclude四个命令 module hello  go 1.16  replace example.com&#x2F;greetings &#x3D;&gt; ..&#x2F;greetings  require example.com&#x2F;greeti">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-11T15:14:41.000Z">
+<meta property="article:modified_time" content="2021-05-11T15:29:21.679Z">
+<meta property="article:author" content="Oswin Wu">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="Oswin Wu"><img width="96" loading="lazy" src="/avatar.png" alt="Oswin Wu"></a><div class="site-author-name"><a href="/about/">Oswin Wu</a></div><span class="site-name">诡异的鱼塘</span><sub class="site-subtitle">一 个 浅 鱼 塘</sub><div class="site-desciption">我也不知道写了啥|炸鱼❌|Friendly Argument ✔</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">5</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">3</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">16</span></a></div><a class="site-state-item hty-icon-button" href="/about/" title="关于我"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/OswinWu" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:Oswin-Wu@outlook.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a><a class="links-item hty-icon-button" href="/girls/" title="可爱的女孩子" style="color:hotpink"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-women-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Go%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">Go项目结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#go-mod"><span class="toc-number">1.1.</span> <span class="toc-text">go.mod</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#go-sum"><span class="toc-number">1.2.</span> <span class="toc-text">go.sum</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#go"><span class="toc-number">1.3.</span> <span class="toc-text">*.go</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAGo-Module%E7%9A%84%E5%85%B8%E5%9E%8B%E8%BF%87%E7%A8%8B%EF%BC%88%E4%B8%80%E7%82%B9%E7%82%B9shell%E5%91%BD%E4%BB%A4%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">创建Go Module的典型过程（一点点shell命令）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="toc-number">2.1.</span> <span class="toc-text">创建文件夹</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96Go-Module"><span class="toc-number">2.2.</span> <span class="toc-text">初始化Go Module</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="toc-number">2.3.</span> <span class="toc-text">单元测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E5%85%A8%E9%83%A8%E4%BE%9D%E8%B5%96%E7%9A%84%E5%8C%85"><span class="toc-number">2.4.</span> <span class="toc-text">显示全部依赖的包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96"><span class="toc-number">2.5.</span> <span class="toc-text">添加依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%85%E7%90%86%E4%BE%9D%E8%B5%96"><span class="toc-number">2.6.</span> <span class="toc-text">清理依赖</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A"><span class="toc-number">3.1.</span> <span class="toc-text">注释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84"><span class="toc-number">3.2.</span> <span class="toc-text">控制结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#if"><span class="toc-number">3.3.</span> <span class="toc-text">if</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#for"><span class="toc-number">3.4.</span> <span class="toc-text">for</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Switch"><span class="toc-number">3.5.</span> <span class="toc-text">Switch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E3%80%81%E6%96%B9%E6%B3%95%E4%B8%8E%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.6.</span> <span class="toc-text">结构体、方法与接口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E4%BD%93%E4%B8%8E%E6%96%B9%E6%B3%95"><span class="toc-number">3.6.1.</span> <span class="toc-text">结构体与方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E9%9B%B6%E7%A2%8E%E5%86%85%E5%AE%B9"><span class="toc-number">4.</span> <span class="toc-text">其他零碎内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-1"><span class="toc-number">4.1.</span> <span class="toc-text">单元测试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#testing-T%E4%B8%8Etesting-M"><span class="toc-number">4.1.1.</span> <span class="toc-text">testing.T与testing.M</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="toc-number">4.2.</span> <span class="toc-text">项目结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="toc-number">4.3.</span> <span class="toc-text">错误处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91"><span class="toc-number">4.4.</span> <span class="toc-text">并发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%8F%E7%A8%8B"><span class="toc-number">4.4.1.</span> <span class="toc-text">协程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://blog.fishsmemory.ml/2021/05/11/Golang/Golang-Start/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="Oswin Wu"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="诡异的鱼塘"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Golang学习手记</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2021-05-11 23:14:41" itemprop="dateCreated datePublished" datetime="2021-05-11T23:14:41+08:00">2021-05-11</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Golang/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Golang</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Golang/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Golang</span></a></span></div><div class="post-author"><div class="author-avatar"><img src="https://www.gravatar.com/avatar/2880a387595e45c517e7cb98cd89bd1a?s=20&amp;d=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2FYunYouJun%2Fcdn%2Fimg%2Favatar%2Fnone.jpg"></div><span class="author-name">Oswin Wu</span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h2 id="Go项目结构"><a href="#Go项目结构" class="headerlink" title="Go项目结构"></a>Go项目结构</h2><ul>
+<li><p>go.mod</p>
+</li>
+<li><p>go.sum</p>
+</li>
+<li><p>*.go</p>
+</li>
+</ul>
+<h3 id="go-mod"><a href="#go-mod" class="headerlink" title="go.mod"></a>go.mod</h3><p>是相关Go包的集合，是源代码交换和版本控制的单元</p>
+<p>其提供了<code>module</code>, <code>require</code>、<code>replace</code>和<code>exclude</code>四个命令</p>
+<pre><code class="go.mod">module hello
+
+go 1.16
+
+replace example.com/greetings =&gt; ../greetings
+
+require example.com/greetings v1.1.0</code></pre>
+<p> <em>一个典型的go.mod示例</em></p>
+<h3 id="go-sum"><a href="#go-sum" class="headerlink" title="go.sum"></a>go.sum</h3><p>是版本控制相关文件，包含了依赖的module的版本及其Hash</p>
+<h3 id="go"><a href="#go" class="headerlink" title="*.go"></a>*.go</h3><p>Go的源文件</p>
+<pre><code class="golang">package hello
+
+import &quot;testing&quot;
+
+func TestHello(t *testing.T) &#123;
+    want := &quot;Hello, world.&quot;
+    if got := Hello(); got != want &#123;
+        t.Errorf(&quot;Hello() = %q, want %q&quot;, got, want)
+    &#125;
+&#125;</code></pre>
+<p><em>一个典型的Go程序代码</em></p>
+<h2 id="创建Go-Module的典型过程（一点点shell命令）"><a href="#创建Go-Module的典型过程（一点点shell命令）" class="headerlink" title="创建Go Module的典型过程（一点点shell命令）"></a>创建Go Module的典型过程（一点点shell命令）</h2><h3 id="创建文件夹"><a href="#创建文件夹" class="headerlink" title="创建文件夹"></a>创建文件夹</h3><pre><code class="shell">mkdir hello
+cd hello</code></pre>
+<h3 id="初始化Go-Module"><a href="#初始化Go-Module" class="headerlink" title="初始化Go Module"></a>初始化Go Module</h3><pre><code class="shell">go mod init example.com/hello</code></pre>
+<h3 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h3><pre><code class="shell">go test
+go test -v # More Detail</code></pre>
+<h3 id="显示全部依赖的包"><a href="#显示全部依赖的包" class="headerlink" title="显示全部依赖的包"></a>显示全部依赖的包</h3><pre><code class="shell">go list -m all</code></pre>
+<h3 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h3><pre><code>go get example.com/example</code></pre>
+<h3 id="清理依赖"><a href="#清理依赖" class="headerlink" title="清理依赖"></a>清理依赖</h3><pre><code>go mod tidy</code></pre>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><p>支持 C 风格的块注释 /* */ 和 C++ 风格的行注释 //</p>
+<p>btw,顶级声明前面的注释都将作为该声明的<strong>文档注释</strong></p>
+<h3 id="控制结构"><a href="#控制结构" class="headerlink" title="控制结构"></a>控制结构</h3><h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><pre><code class="go">if condition &#123;
+    /* Code Here */
+    return result
+&#125;</code></pre>
+<p><em>最简单的if结构</em></p>
+<h3 id="for"><a href="#for" class="headerlink" title="for"></a>for</h3><pre><code class="go">// 类似 C 语言中的 for 用法
+for init; condition; post &#123; &#125;
+
+// 类似 C 语言中的 while 用法
+for condition &#123; &#125;
+
+// 类似 C 语言中的 for(;;) 用法
+for &#123; &#125;</code></pre>
+<p><em>三种常用的方式</em></p>
+<pre><code class="go">for key, value := range oldMap &#123;
+    newMap[key] = value
+&#125;</code></pre>
+<p><em>很方便的切片</em></p>
+<h3 id="Switch"><a href="#Switch" class="headerlink" title="Switch"></a>Switch</h3><pre><code class="go">func unhex(c byte) byte &#123;
+    switch &#123;
+    case &#39;0&#39; &lt;= c &amp;&amp; c &lt;= &#39;9&#39;:
+        return c - &#39;0&#39;
+    case &#39;a&#39; &lt;= c &amp;&amp; c &lt;= &#39;f&#39;:
+        return c - &#39;a&#39; + 10
+    case &#39;A&#39; &lt;= c &amp;&amp; c &lt;= &#39;F&#39;:
+        return c - &#39;A&#39; + 10
+    &#125;
+    return 0
+&#125;</code></pre>
+<p><em>大概是源码里的</em></p>
+<p>switch不会自动向下追溯，所以要使用逗号分隔相同处理的条件，例如：</p>
+<pre><code class="go">func shouldEscape(c byte) bool &#123;
+    switch c &#123;
+    case &#39; &#39;, &#39;?&#39;, &#39;&amp;&#39;, &#39;=&#39;, &#39;#&#39;, &#39;+&#39;, &#39;%&#39;:
+        return true
+    &#125;
+    return false
+&#125;</code></pre>
+<h3 id="结构体、方法与接口"><a href="#结构体、方法与接口" class="headerlink" title="结构体、方法与接口"></a>结构体、方法与接口</h3><h4 id="结构体与方法"><a href="#结构体与方法" class="headerlink" title="结构体与方法"></a>结构体与方法</h4><pre><code class="go">type Student struct &#123;
+    name string
+    age  int
+&#125;
+
+func (stu *Student) hello(person string) string &#123;
+    return fmt.Sprintf(&quot;hello %s, I am %s&quot;, person, stu.name)
+&#125;
+
+func main() &#123;
+    stu := &amp;Student&#123;
+        name: &quot;Tom&quot;,
+    &#125;
+    msg := stu.hello(&quot;Jack&quot;)
+    fmt.Println(msg) // hello Jack, I am Tom
+&#125;</code></pre>
+<h2 id="其他零碎内容"><a href="#其他零碎内容" class="headerlink" title="其他零碎内容"></a>其他零碎内容</h2><h3 id="单元测试-1"><a href="#单元测试-1" class="headerlink" title="单元测试"></a>单元测试</h3><pre><code class="go">package greetings
+
+import (
+    &quot;testing&quot;
+    &quot;regexp&quot;
+)
+
+// TestHelloName calls greetings.Hello with a name, checking 
+// for a valid return value.
+func TestHelloName(t *testing.T) &#123;
+    name := &quot;Gladys&quot;
+    want := regexp.MustCompile(`\b`+name+`\b`)
+    msg, err := Hello(&quot;Gladys&quot;)
+    if !want.MatchString(msg) || err != nil &#123;
+        t.Fatalf(`Hello(&quot;Gladys&quot;) = %q, %v, want match for %#q, nil`, msg, err, want)
+    &#125;
+&#125;
+
+// TestHelloEmpty calls greetings.Hello with an empty string, 
+// checking for an error.
+func TestHelloEmpty(t *testing.T) &#123;
+    msg, err := Hello(&quot;&quot;)
+    if msg != &quot;&quot; || err == nil &#123;
+        t.Fatalf(`Hello(&quot;&quot;) = %q, %v, want &quot;&quot;, error`, msg, err)
+    &#125;
+&#125;</code></pre>
+<p><em>一个单元测试的样例</em>      <em>测试文件一定要包含<strong>test</strong>字样</em></p>
+<h4 id="testing-T与testing-M"><a href="#testing-T与testing-M" class="headerlink" title="testing.T与testing.M"></a>testing.T与testing.M</h4><p>testing.T 是普通测试包<br>testing.M函数可以在测试函数执行之前做一些其他操作</p>
+<h3 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h3><pre><code class="shell">- cmd    //函数主程序
+- internal    //私有库
+- pkg    //公开库
+- vendor    //依赖
+- web    //静态Web资源
+- configs    //配置
+- init    //系统初始化
+- scripts    //安装、构建、部署等脚本
+- build    //打包和持续集成
+- deployments    IaaS, Paas, 系统, 容器编排的部署配置和模板
+- test    //额外的外部测试软件和测试数据
+- docs    //用户及设计文档
+- examples    //应用或者库的示例文件
+- tools    //项目的支持工具
+- third_party    //外部辅助工具, forked 代码, 以及其他第三方工具 
+- githooks    
+- assets    //资源文件
+- website    //站点配置数据</code></pre>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><pre><code class="go">package greetings
+
+import (
+    &quot;errors&quot;
+    &quot;fmt&quot;
+)
+
+// Hello returns a greeting for the named person.
+func Hello(name string) (string, error) &#123;
+    // If no name was given, return an error with a message.
+    if name == &quot;&quot; &#123;
+        return &quot;&quot;, errors.New(&quot;empty name&quot;)
+    &#125;
+
+    // If a name was received, return a value that embeds the name 
+    // in a greeting message.
+    message := fmt.Sprintf(&quot;Hi, %v. Welcome!&quot;, name)
+    return message, nil
+&#125;</code></pre>
+<h3 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h3><h4 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h4><p>在函数或方法前添加 <code>go</code> 关键字能够在新的 Go 协程中调用它。当调用完成后， 该 Go 协程也会安静地退出。（效果有点像 Unix Shell 中的 <code>&amp;</code> 符号，它能让命令在后台运行。）</p>
+<pre><code class="go">go list.Sort()  // 同时运行 list.Sort ; 不需要等待</code></pre>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://learnku.com/docs/effective-go/2020">https://learnku.com/docs/effective-go/2020</a></p>
+<p><a target="_blank" rel="noopener" href="https://golang.org/doc/tutorial">https://golang.org/doc/tutorial</a></p>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>Oswin Wu</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://blog.fishsmemory.ml/2021/05/11/Golang/Golang-Start/" title="Golang学习手记">https://blog.fishsmemory.ml/2021/05/11/Golang/Golang-Start/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"></div><div class="post-nav-item"><a class="post-nav-next" href="/2020/10/12/Software-Engineering/Overview/" rel="next" title="软件工程 - 概述"><span class="post-nav-text">软件工程 - 概述</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> Oswin Wu</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.4.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.1</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
